@@ -37,12 +37,18 @@ class _TaskListPageState extends State<TaskListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task List'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
       body: _tasks.isEmpty
           ? const Center(
         child: Text(
           'No tasks available. Add one!',
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
         ),
       )
           : ListView.builder(
@@ -61,21 +67,60 @@ class _TaskListPageState extends State<TaskListPage> {
             onDismissed: (_) {
               _deleteTask(task.id!);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${task.title} deleted')),
+                SnackBar(
+                  content: Text('${task.title} deleted'),
+                  duration: const Duration(seconds: 2),
+                ),
               );
             },
-            child: ListTile(
-              title: Text(task.title),
-              subtitle: Text(task.description),
-              trailing: Text(task.dueDate),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditTaskPage(task: task),
+            child: Card(
+              margin: const EdgeInsets.symmetric(
+                  vertical: 8, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 2,
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16),
+                title: Text(
+                  task.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                ).then((_) => _loadTasks()); // Reload tasks after returning
-              },
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    Text(
+                      task.description,
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Due: ${task.dueDate}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.teal[700],
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.teal,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditTaskPage(task: task),
+                    ),
+                  ).then((_) => _loadTasks()); // Reload tasks after returning
+                },
+              ),
             ),
           );
         },
@@ -89,7 +134,8 @@ class _TaskListPageState extends State<TaskListPage> {
             ),
           ).then((_) => _loadTasks()); // Reload tasks after adding
         },
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.teal,
+        child: const Icon(Icons.add, size: 28),
       ),
     );
   }
